@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wedding of Win & Diah</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #D4AF37;
+    --gold-light: #F0D060;
+    --gold-dark: #A07820;
+    --gold-pale: #FAF0C0;
+    --black: #060606;
+    --black-mid: #0E0E0E;
+    --black-soft: #1A1A1A;
+    --cream: #F5EDD5;
+    --cream-dim: #C8B87A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 15px var(--gold); }
+  }
+
+  @keyframes drawLine {
+    from { width: 0; opacity: 0; }
+    to { width: 100%; opacity: 1; }
+  }
+
+  @keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes floatUp {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .pulse-icon {
+    display: inline-block;
+    animation: pulse-soft 3.5s infinite ease-in-out;
+  }
+
+  /* ── CURTAIN ── */
+  #curtain {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: all; overflow: hidden;
+  }
+  .curtain-half {
+    width: 50%; height: 100%;
+    background: linear-gradient(to bottom, #0A0A0A 0%, #1A1208 50%, #0A0A0A 100%);
+    position: absolute; top: 0;
+    transition: transform 1.8s cubic-bezier(0.76, 0, 0.24, 1) 0.8s;
+  }
+  .curtain-left { left: 0; }
+  .curtain-right { right: 0; }
+  .curtain-left::before, .curtain-right::before {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0; transition: opacity 0.5s ease;
+  }
+  .curtain-left::before { right: 20px; }
+  .curtain-right::before { left: 20px; }
+  body.opened .curtain-left::before,
+  body.opened .curtain-right::before { opacity: 0.6; }
+  .curtain-text {
+    position: absolute; z-index: 10; text-align: center;
+    pointer-events: none; opacity: 1; transition: opacity 0.6s ease;
+  }
+  body.opened .curtain-text { opacity: 0; }
+  .curtain-text .open-label {
+    font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; letter-spacing: 0.4em;
+    color: var(--gold); opacity: 0.7; animation: pulse-soft 2s infinite ease-in-out;
+  }
+  .curtain-text .bismillah {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem;
+    color: var(--cream); margin-bottom: 18px; letter-spacing: 0.05em;
+  }
+  .curtain-ornament { font-size: 2rem; color: var(--gold); display: block; margin: 8px 0; }
+  .guest-section { margin: 15px 0 25px; pointer-events: all; }
+  .guest-to { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; color: rgba(245,237,213,0.8); font-style: italic; margin-bottom: 5px; }
+  .guest-name { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--gold-light); font-weight: normal; padding: 10px; line-height: 1; filter: drop-shadow(0px 2px 4px rgba(212,175,55,0.3)); }
+  .btn-gold {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.35em;
+    padding: 14px 32px; cursor: pointer; text-decoration: none; transition: all 0.4s ease;
+    box-shadow: 0 0 10px rgba(212,175,55,0.1);
+  }
+  .btn-gold:hover {
+    background: var(--gold); color: var(--black);
+    box-shadow: 0 0 20px rgba(212,175,55,0.5); transform: translateY(-2px);
+  }
+  .btn-open { margin-top: 14px; padding: 10px 28px; pointer-events: all; }
+  body.opened .curtain-left { transform: translateX(-100%); }
+  body.opened .curtain-right { transform: translateX(100%); }
+  body.opened #curtain { pointer-events: none; }
+
+  /* ── SPARKLE ── */
+  #sparkle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+
+  /* ── MAIN CONTENT ── */
+  #main { opacity: 0; transform: translateY(30px); transition: opacity 1.2s ease 2.8s, transform 1.2s ease 2.8s; position: relative; z-index: 2; }
+  body.opened #main { opacity: 1; transform: translateY(0); }
+
+  section { max-width: 680px; margin: 0 auto; padding: 80px 32px; text-align: center; position: relative; }
+
+  /* ════════════════════════════════
+     ── HERO (REWRITTEN – LUXURY) ──
+     ════════════════════════════════ */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 60px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Radial ambient glow layers */
+  #hero::before {
+    content: '';
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 40% at 50% 0%, rgba(212,175,55,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 30% at 50% 100%, rgba(212,175,55,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 50% 50%, rgba(212,175,55,0.04) 0%, transparent 70%);
+  }
+
+  /* Ornamental outer frame */
+  .hero-frame {
+    position: relative;
+    width: 100%; max-width: 600px;
+    padding: 56px 40px 52px;
+    display: flex; flex-direction: column; align-items: center;
+    border: 1px solid rgba(212,175,55,0.18);
+    box-shadow:
+      0 0 0 6px rgba(212,175,55,0.04),
+      0 0 0 7px rgba(212,175,55,0.12),
+      0 0 60px rgba(212,175,55,0.08),
+      inset 0 0 60px rgba(0,0,0,0.4);
+  }
+
+  /* Corner ornaments */
+  .hero-frame::before, .hero-frame::after,
+  .hero-frame .corner-br, .hero-frame .corner-tl {
+    content: ''; position: absolute; width: 28px; height: 28px;
+    border-color: var(--gold); border-style: solid; opacity: 0.7;
+  }
+  .hero-frame::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .hero-frame::after  { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+  .corner-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  .corner-tl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+
+  /* Top decorative header */
+  .hero-crown {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.9s ease 3.2s forwards;
+  }
+  .hero-crown-line {
+    height: 1px; width: 60px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
+  .hero-crown-line.right {
+    background: linear-gradient(to left, transparent, var(--gold));
+  }
+  .hero-crown-diamond {
+    display: flex; gap: 6px; align-items: center; color: var(--gold);
+    font-size: 0.55rem; letter-spacing: 0.5em;
+    font-family: 'Cinzel', serif;
+  }
+
+  /* THE WEDDING OF label */
+  .hero-label {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.65em;
+    color: var(--gold); margin-bottom: 24px; opacity: 0;
+    animation: fadeUp 0.9s ease 3.3s forwards;
+  }
+
+  /* Names — shimmer gold gradient */
+  .hero-name-wrap {
+    position: relative; margin: 0;
+    opacity: 0; animation: fadeUp 1s ease 3.5s forwards;
+    animation-fill-mode: both;
+  }
+  .hero-name-wrap + .hero-amp-wrap { margin-top: 4px; }
+
+  .hero-names {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(3.2rem, 11vw, 6rem);
+    background: linear-gradient(
+      90deg,
+      var(--gold-dark) 0%,
+      var(--gold-pale) 25%,
+      var(--gold) 40%,
+      var(--gold-pale) 55%,
+      var(--gold-dark) 70%,
+      var(--gold-pale) 85%,
+      var(--gold-dark) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+    line-height: 1.15;
+    padding: 8px 16px;
+    filter: drop-shadow(0px 4px 14px rgba(212,175,55,0.3));
+    display: block;
+  }
+
+  /* Animated underline beneath each name */
+  .name-underline {
+    height: 1px; width: 0; margin: 0 auto 8px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    animation: drawLine 1.2s ease forwards;
+    opacity: 0;
+  }
+  .hero-name-wrap:nth-child(1) .name-underline { animation-delay: 4.2s; }
+  .hero-name-wrap:nth-child(3) .name-underline { animation-delay: 4.6s; }
+
+  /* Ampersand */
+  .hero-amp-wrap {
+    opacity: 0; animation: fadeUp 0.9s ease 3.7s forwards;
+    margin: 4px 0;
+  }
+  .hero-amp {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    color: rgba(212,175,55,0.55);
+    display: block;
+    animation: floatUp 5s ease-in-out infinite;
+    animation-delay: 5s;
+  }
+
+  /* Divider ornament between */
+  .hero-ornament-row {
+    display: flex; align-items: center; justify-content: center; gap: 0;
+    margin: 20px 0;
+    opacity: 0; animation: fadeUp 0.9s ease 3.9s forwards;
+  }
+  .hero-ornament-row .gold-line { width: 50px; }
+  .diamond { display: inline-block; width: 7px; height: 7px; background: var(--gold); transform: rotate(45deg); margin: 0 8px; }
+
+  /* Date badge */
+  .hero-date-badge {
+    margin-top: 24px;
+    opacity: 0; animation: fadeUp 0.9s ease 4.1s forwards;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .hero-date-top {
+    font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.5em;
+    color: rgba(212,175,55,0.6);
+  }
+  .hero-date-main {
+    font-family: 'Cinzel Decorative', serif; font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+    color: var(--gold-light); letter-spacing: 0.15em;
+  }
+  .hero-date-sub {
+    font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; font-style: italic;
+    color: rgba(245,237,213,0.5); margin-top: 2px;
+  }
+
+  /* Sub tagline */
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.9rem;
+    color: rgba(212,175,55,0.5); letter-spacing: 0.25em; margin-top: 20px;
+    opacity: 0; animation: fadeUp 0.9s ease 4.3s forwards;
+  }
+
+  /* Rotating ring ornament (purely decorative) */
+  .hero-ring {
+    position: absolute; pointer-events: none;
+    border-radius: 50%;
+    border: 1px solid rgba(212,175,55,0.08);
+  }
+  .hero-ring-1 { width: 500px; height: 500px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: rotateSlow 60s linear infinite; }
+  .hero-ring-2 { width: 340px; height: 340px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: rotateSlow 40s linear infinite reverse; border-style: dashed; border-color: rgba(212,175,55,0.06); }
+
+  /* ── GOLD UTILS ── */
+  .gold-line { height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); margin: 24px auto; width: 120px; }
+  .gold-line.short { width: 60px; }
+
+  /* ── OPENING TEXT ── */
+  .arabic-greeting { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-style: italic; color: var(--gold); margin-bottom: 12px; }
+  .body-text { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; line-height: 1.9; color: rgba(245,237,213,0.85); font-weight: 300; }
+
+  /* ── COUPLE CARDS ── */
+  .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 30px 0; }
+  @media (max-width: 520px) { .couple-grid { grid-template-columns: 1fr; } }
+  .couple-card {
+    background: linear-gradient(145deg, rgba(212,175,55,0.06), rgba(212,175,55,0.02));
+    border: 1px solid rgba(212,175,55,0.15);
+    outline: 1px solid rgba(212,175,55,0.4); outline-offset: -8px;
+    padding: 42px 24px; position: relative; overflow: hidden;
+  }
+  .couple-role { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.5em; color: var(--gold); margin-bottom: 14px; opacity: 0.8; }
+  .couple-name {
+    font-family: 'Great Vibes', cursive; font-size: clamp(2rem, 6vw, 2.8rem);
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    display: block; margin-bottom: 14px; padding: 10px;
+    filter: drop-shadow(0px 3px 6px rgba(212,175,55,0.2));
+  }
+  .couple-parents { font-family: 'Cormorant Garamond', serif; font-size: 0.88rem; color: rgba(245,237,213,0.6); font-style: italic; line-height: 1.7; }
+
+  /* ── VERSE ── */
+  #verse {
+    background: linear-gradient(to bottom, rgba(212,175,55,0.05), rgba(212,175,55,0.02)), repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(212,175,55,0.015) 40px, rgba(212,175,55,0.015) 41px);
+    border-top: 1px solid rgba(212,175,55,0.15); border-bottom: 1px solid rgba(212,175,55,0.15); max-width: 100%; padding: 80px 32px;
+  }
+  .verse-icon { font-size: 2rem; margin-bottom: 20px; }
+  .verse-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.1rem,3vw,1.35rem); font-style: italic; color: var(--cream); line-height: 2; max-width: 560px; margin: 0 auto 16px; font-weight: 300; }
+  .verse-source { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.4em; color: var(--gold); opacity: 0.8; }
+
+  /* ── CEREMONY ── */
+  .ceremony-box {
+    background: linear-gradient(145deg, rgba(212,175,55,0.08), transparent); border: 1px solid rgba(212,175,55,0.3); padding: 48px 36px; position: relative; margin: 24px 0;
+  }
+  .ceremony-box::before, .ceremony-box::after { content: '◆'; position: absolute; color: var(--gold); font-size: 0.6rem; left: 50%; transform: translateX(-50%); }
+  .ceremony-box::before { top: -7px; } .ceremony-box::after { bottom: -7px; }
+  .ceremony-icon { font-size: 1.8rem; margin-bottom: 16px; }
+  .ceremony-title { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.5em; color: var(--gold); margin-bottom: 20px; }
+  .ceremony-date { font-family: 'Great Vibes', cursive; font-size: clamp(1.8rem,5vw,2.6rem); color: var(--gold-light); display: block; margin: 8px 0; }
+  .ceremony-detail { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: rgba(245,237,213,0.75); line-height: 1.9; margin-top: 12px; }
+
+  /* ── COUNTDOWN ── */
+  .countdown-wrap { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin: 36px 0; }
+  .countdown-unit { text-align: center; min-width: 72px; }
+  .countdown-num {
+    font-family: 'Cinzel Decorative', serif; font-size: clamp(2rem,7vw,3rem);
+    color: var(--gold-light); display: block; line-height: 1;
+    border: 1px solid rgba(212,175,55,0.2); padding: 12px 18px;
+    background-color: rgba(212,175,55,0.04); position: relative;
+  }
+  .countdown-label { font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.35em; color: rgba(212,175,55,0.6); margin-top: 8px; display: block; }
+
+  /* ── STORY ── */
+  .story-item { display: flex; gap: 24px; text-align: left; margin-bottom: 44px; align-items: flex-start; position: relative; }
+  .story-item:not(:last-child)::before { content: ''; position: absolute; left: 20px; top: 50px; bottom: -54px; width: 1px; background: linear-gradient(to bottom, var(--gold), transparent); opacity: 0.4; }
+  .story-num { font-family: 'Cinzel Decorative', serif; font-size: 2.5rem; color: rgba(212,175,55,0.3); line-height: 1; flex-shrink: 0; width: 40px; text-align: center; background: var(--black); z-index: 2; position: relative; }
+  .story-phase { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.45em; color: var(--gold); margin-bottom: 8px; }
+  .story-title { font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--cream); display: block; margin-bottom: 8px; }
+  .story-body { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: rgba(245,237,213,0.7); line-height: 1.9; font-weight: 300; font-style: italic; }
+
+  /* ── SECTION HEADERS ── */
+  .section-label { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.55em; color: var(--gold); margin-bottom: 14px; opacity: 0.85; }
+  .section-title { font-family: 'Great Vibes', cursive; font-size: clamp(2.2rem,7vw,3.2rem); color: var(--cream); margin-bottom: 8px; }
+
+  /* ── WISH FORM ── */
+  .wish-form { margin-top: 30px; text-align: left; }
+  .wish-form input, .wish-form textarea {
+    width: 100%; background: rgba(212,175,55,0.04); border: 1px solid rgba(212,175,55,0.25);
+    color: var(--cream); font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+    padding: 14px 18px; margin-bottom: 14px; outline: none; transition: border-color 0.3s; resize: none;
+  }
+  .wish-form input::placeholder, .wish-form textarea::placeholder { color: rgba(245,237,213,0.3); }
+  .wish-form input:focus, .wish-form textarea:focus { border-color: var(--gold); }
+  .wish-form button { width: 100%; padding: 16px; }
+  .wish-list { margin-top: 30px; text-align: left; max-height: 400px; overflow-y: auto; padding-right: 10px; }
+  .wish-list::-webkit-scrollbar { width: 4px; }
+  .wish-list::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 4px; }
+  .wish-item { border-bottom: 1px solid rgba(212,175,55,0.1); padding: 18px 0; animation: fadeUp 0.6s ease forwards; }
+  .wish-sender { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 6px; }
+  .wish-msg { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-style: italic; color: rgba(245,237,213,0.7); line-height: 1.7; }
+
+  /* ── CLOSING ── */
+  #closing { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at 50% 50%, rgba(212,175,55,0.1) 0%, transparent 70%); border-top: 1px solid rgba(212,175,55,0.15); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MUSIC TOGGLE ── */
+  #music-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 100; width: 44px; height: 44px;
+    border: 1px solid rgba(212,175,55,0.5); background: rgba(10,10,10,0.85); color: var(--gold);
+    font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px); transition: border-color 0.3s; border-radius: 50%;
+  }
+  #music-btn:hover { border-color: var(--gold); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
+
+  /* ── DIVIDER ── */
+  .divider { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 0 auto; padding: 0 32px; max-width: 400px; opacity: 0.4; }
+  .divider-line { flex: 1; height: 1px; background: var(--gold); }
+  .divider-symbol { color: var(--gold); font-size: 0.7rem; }
+
+  /* BG */
+  .bg-marble {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 20% 20%, rgba(212,175,55,0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(212,175,55,0.03) 0%, transparent 50%), linear-gradient(to bottom, #050505, #0a0800, #050505);
+  }
+</style>
+</head>
+<body>
+
+<audio id="bg-music" loop preload="auto">
+  <source src="musik.mp3" type="audio/mpeg">
+</audio>
+
+<div class="bg-marble"></div>
+<canvas id="sparkle-canvas"></canvas>
+<button id="music-btn" title="Toggle music">♪</button>
+
+<div id="curtain">
+  <div class="curtain-half curtain-left"></div>
+  <div class="curtain-half curtain-right"></div>
+  <div class="curtain-text">
+    <div class="bismillah">Bismillahirrahmanirrahim</div>
+    <span class="curtain-ornament pulse-icon">✦</span>
+    <div class="guest-section">
+      <p class="guest-to">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+      <h2 class="guest-name" id="guest-name">Tamu Undangan</h2>
+    </div>
+    <div class="open-label">KETUK UNTUK MEMBUKA</div>
+    <button class="btn-gold btn-open" onclick="openCurtain()">BUKA UNDANGAN ✦</button>
+  </div>
+</div>
+
+<div id="main">
+
+  <!-- ══ HERO SECTION (LUXURY REDESIGN) ══ -->
+  <section id="hero">
+    <!-- Decorative rings -->
+    <div class="hero-ring hero-ring-1"></div>
+    <div class="hero-ring hero-ring-2"></div>
+
+    <!-- Main framed card -->
+    <div class="hero-frame">
+      <div class="corner-br"></div>
+      <div class="corner-tl"></div>
+
+      <!-- Crown top -->
+      <div class="hero-crown">
+        <div class="hero-crown-line"></div>
+        <div class="hero-crown-diamond">✦ &nbsp; ✦ &nbsp; ✦</div>
+        <div class="hero-crown-line right"></div>
+      </div>
+
+      <!-- Label -->
+      <p class="hero-label">THE WEDDING OF</p>
+
+      <!-- Groom name -->
+      <div class="hero-name-wrap">
+        <span class="hero-names">Win Dwitomo</span>
+        <div class="name-underline"></div>
+      </div>
+
+      <!-- Ampersand -->
+      <div class="hero-amp-wrap">
+        <span class="hero-amp">&</span>
+      </div>
+
+      <!-- Bride name -->
+      <div class="hero-name-wrap" style="animation-delay: 3.9s;">
+        <span class="hero-names">Diah Wulan Fitri</span>
+        <div class="name-underline"></div>
+      </div>
+
+      <!-- Divider -->
+      <div class="hero-ornament-row">
+        <div class="gold-line short"></div>
+        <div class="diamond"></div>
+        <div class="diamond" style="opacity:0.4; transform:rotate(45deg) scale(0.6);"></div>
+        <div class="diamond"></div>
+        <div class="gold-line short"></div>
+      </div>
+
+      <!-- Date badge -->
+      <div class="hero-date-badge">
+        <span class="hero-date-top">AKAD NIKAH</span>
+        <span class="hero-date-main">Minggu, 29 Maret 2026</span>
+        <span class="hero-date-sub">Masjid Al-Huda Karangpakis</span>
+      </div>
+
+      <!-- Tagline -->
+      <p class="hero-sub">✦ &nbsp; With Love & Blessing &nbsp; ✦</p>
+    </div>
+  </section>
+
+  <section id="opening">
+    <div class="reveal">
+      <p class="arabic-greeting">Assalamu'alaikum Warahmatullahi Wabarakatuh</p>
+      <div class="gold-line"></div>
+      <p class="body-text">Dengan penuh rasa syukur atas rahmat Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam momen istimewa pernikahan kami.</p>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><span class="divider-symbol pulse-icon">◆ ✦ ◆</span><div class="divider-line"></div></div>
+
+  <section id="couple">
+    <div class="reveal"><p class="section-label">— THE COUPLE —</p></div>
+    <div class="couple-grid reveal">
+      <div class="couple-card">
+        <p class="couple-role">🖤 THE GROOM</p>
+        <span class="couple-name">Win Dwitomo</span>
+        <p class="couple-parents">Putra dari<br>Bapak Poniran<br>& Ibu Saminah</p>
+      </div>
+      <div class="couple-card">
+        <p class="couple-role">🖤 THE BRIDE</p>
+        <span class="couple-name">Diah Wulan Fitri</span>
+        <p class="couple-parents">Putri dari<br>Bapak Budiono<br>& Ibu Surajiyah</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="verse">
+    <div class="reveal">
+      <span class="verse-icon pulse-icon">✨</span>
+      <p class="section-label">— A SACRED VERSE —</p>
+      <p class="verse-text">"Dan di antara tanda-tanda kebesaran-Nya, Dia menciptakan pasangan untukmu agar kamu mendapatkan ketenangan di dalamnya."</p>
+      <p class="verse-source">QS. Ar-Rum : 21</p>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><span class="divider-symbol pulse-icon">◆ ✦ ◆</span><div class="divider-line"></div></div>
+
+  <section id="ceremony">
+    <div class="reveal"><p class="section-label">🕊️ AKAD CEREMONY</p></div>
+    <div class="ceremony-box reveal">
+      <span class="ceremony-icon pulse-icon">🕊️</span>
+      <p class="ceremony-title">AKAD NIKAH</p>
+      <span class="ceremony-date">Minggu, 29 Maret 2026</span>
+      <p class="ceremony-detail">
+        Pukul 07.00 – 09.00 WIB<br><br>
+        <strong style="color:var(--gold-light); font-family:'Cinzel',serif; font-size:0.8rem; letter-spacing:0.2em;">Masjid Al-Huda Karangpakis</strong>
+      </p>
+    </div>
+
+    <div class="reveal">
+      <p class="section-label" style="margin-top:48px;">⏳ MENUJU HARI BAHAGIA</p>
+      <p class="body-text" style="margin-bottom:28px; font-style:italic; font-size:0.95rem;">Hari bahagia kami semakin dekat. Sebuah awal dari perjalanan suci yang akan kami jalani bersama selamanya.</p>
+      <div class="countdown-wrap" id="countdown">
+        <div class="countdown-unit"><span class="countdown-num" id="cd-days">00</span><span class="countdown-label">HARI</span></div>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-hours">00</span><span class="countdown-label">JAM</span></div>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-mins">00</span><span class="countdown-label">MENIT</span></div>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-secs">00</span><span class="countdown-label">DETIK</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><span class="divider-symbol pulse-icon">◆ ✦ ◆</span><div class="divider-line"></div></div>
+
+  <section id="story">
+    <div class="reveal">
+      <p class="section-label">🖤 OUR STORY</p>
+      <p class="section-title">Kisah Kami</p>
+      <div class="gold-line" style="margin-bottom:48px;"></div>
+    </div>
+    <div class="story-item reveal">
+      <div class="story-num">01</div>
+      <div class="story-content">
+        <p class="story-phase">A BEGINNING</p>
+        <span class="story-title">Pertemuan</span>
+        <p class="story-body">Segalanya dimulai dari sebuah proses ta'aruf yang singkat, tanpa perjalanan panjang, namun penuh keyakinan. Dalam waktu yang tidak lama, kami dipertemukan dengan niat yang sama: menjalani hubungan yang diridhoi Allah SWT.</p>
+      </div>
+    </div>
+    <div class="story-item reveal">
+      <div class="story-num">02</div>
+      <div class="story-content">
+        <p class="story-phase">THE PROMISE</p>
+        <span class="story-title">Janji Suci</span>
+        <p class="story-body">Dengan restu keluarga dan keyakinan hati, pada 7 Maret 2026, kami mengikat niat dalam sebuah lamaran sederhana yang penuh makna.</p>
+      </div>
+    </div>
+    <div class="story-item reveal">
+      <div class="story-num">03</div>
+      <div class="story-content">
+        <p class="story-phase">FOREVER BEGINS</p>
+        <span class="story-title">Selamanya</span>
+        <p class="story-body">Kini kami melangkah menuju ikatan suci pernikahan, memulai kisah baru sebagai pasangan dalam ridho dan keberkahan-Nya.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><span class="divider-symbol pulse-icon">◆ ✦ ◆</span><div class="divider-line"></div></div>
+
+  <section id="venue">
+    <div class="reveal">
+      <p class="section-label">📍 LOKASI ACARA</p>
+      <p class="section-title">Venue</p>
+      <div class="gold-line"></div>
+      <p class="body-text" style="margin-top:20px;">Masjid Al-Huda Karangpakis<br>Temukan lokasi acara kami melalui Google Maps.</p>
+      <a href="https://maps.app.goo.gl/qZSmgJUW6XatC3Wq5?g_st=ic" target="_blank" class="btn-gold">
+        <span>🗺</span> BUKA GOOGLE MAPS
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><span class="divider-symbol pulse-icon">◆ ✦ ◆</span><div class="divider-line"></div></div>
+
+  <section id="wishes">
+    <div class="reveal">
+      <p class="section-label">💌 BLESSINGS & WISHES</p>
+      <p class="section-title">Ucapan & Doa</p>
+      <div class="gold-line"></div>
+      <p class="body-text" style="margin-top:16px; font-style:italic;">Doa dan restu Anda merupakan hadiah terindah bagi kami di hari bahagia ini.</p>
+    </div>
+    <div class="wish-form reveal">
+      <input type="text" id="wish-name" placeholder="Nama Anda" maxlength="60">
+      <textarea id="wish-msg" rows="4" placeholder="Tuliskan doa dan ucapan terbaik Anda..."></textarea>
+      <button class="btn-gold" onclick="submitWish()">KIRIM DOA & UCAPAN ✦</button>
+    </div>
+    <div class="wish-list" id="wish-list"></div>
+  </section>
+
+  <section id="closing">
+    <div class="reveal">
+      <p class="section-label">🖤 PENUTUP</p>
+      <p class="section-title" style="font-size:clamp(2rem,8vw,4rem);">Win & Diah</p>
+      <div class="hero-ornament-row" style="opacity:1;">
+        <div class="gold-line short"></div>
+        <div class="diamond"></div>
+        <div class="gold-line short"></div>
+      </div>
+      <p class="arabic-greeting">Wassalamu'alaikum Warahmatullahi Wabarakatuh</p>
+      <div class="gold-line" style="margin:20px auto;"></div>
+      <p class="body-text" style="font-style:italic; font-size:0.9rem; opacity:0.7;">Dengan penuh cinta,<br>Win Dwitomo & Diah Wulan Fitri</p>
+      <div style="margin-top:48px; font-size:1.5rem; color:var(--gold); opacity:0.5; letter-spacing:0.3em;">✦ ✦ ✦</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// ── AMBIL NAMA TAMU DARI URL ──
+const urlParams = new URLSearchParams(window.location.search);
+const guestName = urlParams.get('to');
+if (guestName) document.getElementById('guest-name').textContent = guestName;
+
+// ── CURTAIN ──
+function openCurtain() {
+  document.body.classList.add('opened');
+  setTimeout(() => { document.getElementById('curtain').style.display = 'none'; }, 3000);
+
+  // Auto-play musik saat undangan dibuka
+  const audio = document.getElementById('bg-music');
+  audio.volume = 0.4;
+  audio.play().catch(() => {}); // .catch() untuk amankan jika browser blokir
+}
+// ── SPARKLE ──
+const canvas = document.getElementById('sparkle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+function createParticle(x, y) {
+  return { x, y, vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5-0.8, alpha: Math.random()*0.8+0.2, size: Math.random()*2.5+0.5, life: 1, decay: Math.random()*0.012+0.006, gold: Math.random()>0.3 };
+}
+function spawnRandomParticle() { particles.push(createParticle(Math.random()*canvas.width, Math.random()*canvas.height)); }
+setInterval(spawnRandomParticle, 120);
+function animateParticles() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles = particles.filter(p => p.life > 0);
+  for (let p of particles) {
+    p.x += p.vx; p.y += p.vy; p.life -= p.decay;
+    ctx.save(); ctx.globalAlpha = p.life * p.alpha * 0.6;
+    ctx.fillStyle = p.gold ? '#D4AF37' : '#F0D060';
+    ctx.beginPath();
+    if (Math.random()>0.5) { ctx.arc(p.x,p.y,p.size,0,Math.PI*2); }
+    else { ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(Math.PI/4); ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size); ctx.restore(); }
+    ctx.fill(); ctx.restore();
+  }
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ── COUNTDOWN ──
+function updateCountdown() {
+  const target = new Date('2026-03-29T07:00:00+07:00');
+  let diff = target - new Date();
+  if (diff <= 0) { ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => document.getElementById(id).textContent='00'); return; }
+  const days = Math.floor(diff/86400000); diff -= days*86400000;
+  const hours = Math.floor(diff/3600000); diff -= hours*3600000;
+  const mins = Math.floor(diff/60000); diff -= mins*60000;
+  const secs = Math.floor(diff/1000);
+  document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+  document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+}
+updateCountdown(); setInterval(updateCountdown, 1000);
+
+// ── SCROLL REVEAL ──
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+revealEls.forEach(el => observer.observe(el));
+
+// ── WISHES + GOOGLE SHEETS ──
+// Ganti URL di bawah dengan Web App URL dari Google Apps Script kamu
+const SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_KAMU';
+
+let wishes = JSON.parse(localStorage.getItem('wedding_wishes') || '[]');
+
+function renderWishes() {
+  const container = document.getElementById('wish-list');
+  if (!wishes.length) {
+    container.innerHTML = '<p style="text-align:center;color:rgba(245,237,213,0.3);font-style:italic;font-size:0.9rem;padding:20px 0;">Jadilah yang pertama memberikan doa...</p>';
+    return;
+  }
+  container.innerHTML = wishes.slice().reverse().slice(0, 20).map(w =>
+    `<div class="wish-item"><p class="wish-sender">✦ ${w.name}</p><p class="wish-msg">${w.msg}</p></div>`
+  ).join('');
+}
+
+function setWishStatus(msg, isError) {
+  let el = document.getElementById('wish-status');
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'wish-status';
+    el.style.cssText = 'font-family:"Cormorant Garamond",serif;font-style:italic;font-size:0.9rem;margin-top:12px;text-align:center;transition:opacity 0.5s;';
+    document.querySelector('.wish-form').appendChild(el);
+  }
+  el.style.color = isError ? 'rgba(255,180,100,0.8)' : 'rgba(212,175,55,0.9)';
+  el.textContent = msg;
+  el.style.opacity = '1';
+  if (!isError) setTimeout(() => { el.style.opacity = '0'; }, 4000);
+}
+
+async function submitWish() {
+  const nameEl = document.getElementById('wish-name');
+  const msgEl  = document.getElementById('wish-msg');
+  const btn    = document.querySelector('.wish-form button');
+  const name   = nameEl.value.trim();
+  const msg    = msgEl.value.trim();
+
+  if (!name || !msg) { setWishStatus('Mohon isi nama dan ucapan terlebih dahulu.', true); return; }
+
+  // Simpan lokal dulu agar langsung muncul
+  const entry = { name, msg, time: Date.now() };
+  wishes.push(entry);
+  localStorage.setItem('wedding_wishes', JSON.stringify(wishes));
+  nameEl.value = '';
+  msgEl.value  = '';
+  renderWishes();
+
+  // Kirim ke Google Sheets
+  if (!SCRIPT_URL || SCRIPT_URL.includes('GANTI')) {
+    setWishStatus('✦ Ucapan tersimpan! (Google Sheets belum dikonfigurasi)', false);
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'MENGIRIM...';
+  setWishStatus('Mengirim ucapan...', false);
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Apps Script tidak support CORS penuh
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, msg }),
+    });
+    // no-cors → response selalu opaque, anggap berhasil jika tidak error
+    setWishStatus('✦ Ucapan berhasil dikirim & tersimpan!', false);
+  } catch (err) {
+    setWishStatus('Tersimpan lokal. Gagal kirim ke server — cek koneksi.', true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'KIRIM DOA & UCAPAN ✦';
+  }
+}
+
+renderWishes();
+
+// ── MUSIC ──
+const audio = document.getElementById('bg-music');
+let playing = false;
+
+function toggleMusic() {
+  const btn = document.getElementById('music-btn');
+  if (!playing) {
+    audio.volume = 0.4;
+    audio.play();
+    playing = true;
+    btn.textContent = '♬';
+    btn.style.borderColor = 'var(--gold)';
+  } else {
+    audio.pause();
+    playing = false;
+    btn.textContent = '♪';
+    btn.style.borderColor = '';
+  }
+}
+
+document.getElementById('music-btn').addEventListener('click', toggleMusic);
+document.getElementById('music-btn').addEventListener('click', toggleMusic);
+</script>
+</body>
+</html>
